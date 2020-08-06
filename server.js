@@ -21,62 +21,68 @@ const test = {
 }
 
 app.get("/api/test", function(req, res) {
+  console.log(test)
+  res.json(test);
+});
+
+app.post("/api/email", function(req, res) {
+  console.log(req.body.data)
   res.json(test);
 });
 
 // -------------------------------------------------------------------------
 
-app.post("/api/email", function(req, res) {
-  const emails = req.body.email.join(", ")
+// app.post("/api/email", function(req, res) {
+//   const emails = req.body.email.join(", ")
 
-  async function main() {
+//   async function main() {
 
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: 'austinwalker.dev@gmail.com', // generated ethereal user
-      pass: '' // generated ethereal password
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
-  });
+//   let transporter = nodemailer.createTransport({
+//     host: "smtp.gmail.com",
+//     port: 587,
+//     secure: false, // true for 465, false for other ports
+//     auth: {
+//       user: 'austinwalker.dev@gmail.com', // generated ethereal user
+//       pass: '' // generated ethereal password
+//     },
+//     tls: {
+//       rejectUnauthorized: false
+//     }
+//   });
 
-  transporter.use("compile",hbs({
-    viewEngine:{
-       partialsDir: 'views',
-       defaultLayout:""
-   },
-      viewPath:"./views/",
-      extName:".handlebars"
-    }));
+//   transporter.use("compile",hbs({
+//     viewEngine:{
+//        partialsDir: 'views',
+//        defaultLayout:""
+//    },
+//       viewPath:"./views/",
+//       extName:".handlebars"
+//     }));
   
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '"Austin Walker" <austinwalker.dev@gmail.com', // sender address
-    to: emails, // list of receivers
-    subject: "Mailer Template", // Subject line
-    // html: emailHTML, // html body
-    template: 'index',
-    attachments: []
+//   // send mail with defined transport object
+//   let info = await transporter.sendMail({
+//     from: '"Austin Walker" <austinwalker.dev@gmail.com', // sender address
+//     to: emails, // list of receivers
+//     subject: "Mailer Template", // Subject line
+//     // html: emailHTML, // html body
+//     template: 'index',
+//     attachments: []
 
-  });
+//   });
   
-  console.log("Message sent: %s", info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+//   console.log("Message sent: %s", info.messageId);
+//   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
   
-  // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-}
-main().catch(console.error)
-const sucessful = {
-  success: "Succesful!"
-}
-res.json(sucessful) 
-});
+//   // Preview only available when sending through an Ethereal account
+//   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+//   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+// }
+// main().catch(console.error)
+// const sucessful = {
+//   success: "Succesful!"
+// }
+// res.json(sucessful) 
+// });
 
 
 //--------------------------------------------------------------------------

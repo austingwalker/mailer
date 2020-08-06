@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import API from "../../utils/API";
+import moment from 'moment'
 import "./Form.css"
 
 
@@ -8,15 +9,11 @@ class Form extends Component {
     recipient: "",
     cc: "",
     name: "",
+    template: "",
     location: "",
-    issue: {
-      damage: false,
-      data: false,
-      power: false,
-      other: false
-    },
+    issue: "",
     description: "",
-    ticket: 0
+    ticket: ""
   };
 
   handleInputChange = event => {
@@ -26,19 +23,48 @@ class Form extends Component {
     });
   };
 
+  handleTemplate = e => {
+    this.setState({template: e.target.value})
+  }
+
+  handleCheck = e => {
+    const value = e.target.value
+    if(this.state.issue === value){
+      this.setState({ issue: "" })
+    } else {
+      this.setState({ issue: value })
+    }
+  }
+
   
   handleFormSubmit = e => {
     e.preventDefault()
- 
-    // this.sendEmail()
+    const payload = {
+      recipient: this.state.recipient,
+      cc: this.state.cc,
+      name: this.state.name,
+      template: this.state.template,
+      location: this.state.location,
+      issue: this.state.issue,
+      description: this.state.description,
+      ticket: this.state.ticket,
+      time: moment().format('MMMM Do YYYY, h:mm:ss a')
+    }
+    console.log(payload)
+    this.sendEmail(payload)
   }
 
-  sendEmail = () => {
+  sendEmail = (payload) => {
+    // API.getTest()
+    //   .then(res =>
+    //     console.log(res)
+    //   )
+    //   .catch(err => console.log(err));
     API.email({
-      email: ""
+      data: payload
     })
       .then(res => {
-
+        console.log(res)
       })
   }
   
@@ -57,9 +83,9 @@ class Form extends Component {
         </div>
         <div className="form-row form-group">
             <label className="font-weight-bold">Template:</label>
-            <select id="inputTemplate" className="form-control">
+            <select id="inputTemplate" className="form-control" value={this.state.template} onChange={this.handleTemplate}>
               <option selected>Choose...</option>
-              <option>Dynamic Message Sign Issue</option>
+              <option value="Dynamic Message Sign Issue">Dynamic Message Sign Issue</option>
             </select>
         </div>
         <div className="form-row form-group">
@@ -74,19 +100,19 @@ class Form extends Component {
         <div className="form-row form-group">
         <label className="font-weight-bold w-100">Issue Type:</label>
           <div className="form-check form-check-inline">
-            <input className="form-check-input" type="checkbox" id="damageCheckbox" value="damage"/>
+            <input className="form-check-input" type="checkbox" id="damageCheckbox" value="Damage" onChange={this.handleCheck}/>
             <label className="form-check-label">Damage</label>
           </div>
           <div className="form-check form-check-inline">
-            <input className="form-check-input" type="checkbox" id="dataCheckbox" value="data"/>
+            <input className="form-check-input" type="checkbox" id="dataCheckbox" value="Data" onChange={this.handleCheck}/>
             <label className="form-check-label">Data</label>
           </div>
           <div className="form-check form-check-inline">
-            <input className="form-check-input" type="checkbox" id="powerCheckbox" value="power" />
+            <input className="form-check-input" type="checkbox" id="powerCheckbox" value="Power" onChange={this.handleCheck}/>
             <label className="form-check-label">Power</label>
           </div>
           <div className="form-check form-check-inline">
-            <input className="form-check-input" type="checkbox" id="otherCheckbox" value="other" />
+            <input className="form-check-input" type="checkbox" id="otherCheckbox" value="Other" onChange={this.handleCheck}/>
             <label className="form-check-label">Other</label>
           </div>
         </div>
@@ -96,10 +122,10 @@ class Form extends Component {
         </div>
         <div className="form-row form-group">
           <label className="font-weight-bold">IT Service Now Ticket Number:</label>
-          <input type="number" className="form-control" id="ticketNum"/>
+          <input type="text" className="form-control" id="ticketNum" name="ticket" value={this.state.ticket}  onChange={this.handleInputChange}/>
         </div>
         <div className="form-row form-group">
-          <button type="submit" className="btn btn-primary btn-block sendBtn">Send</button>
+          <button type="submit" className="btn btn-primary btn-block sendBtn" onClick={this.handleFormSubmit}>Send</button>
         </div>
       </form>
     );

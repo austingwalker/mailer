@@ -6,7 +6,7 @@ export default {
     return axios.get("/api/test");
   },
 
-  email: function(type) {
-    return axios.post("/api/email", type);
+  email: function(data) {
+    return axios.post("/api/email", data);
   }
 };
